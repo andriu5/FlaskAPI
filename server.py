@@ -41,7 +41,7 @@ class User(db.Model):
     phone = db.Column(db.String(50))
     posts = db.relationship("BlogPost")
 
-class BLogPost(db.Model):
+class BlogPost(db.Model):
     __tablename__ = "blog_post"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
@@ -52,7 +52,16 @@ class BLogPost(db.Model):
 # routes
 @app.route("/user", methods=["POST"])
 def create_user():
-    pass
+    data = request.get_json()
+    new_user = User(
+        name = data["name"],
+        email = data["email"],
+        address = data["address"],
+        phone = data["phone"],
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({"message": "User created"}), 200
 
 @app.route("/user/descending_id", methods=["GET"])
 def get_all_users_descending():
